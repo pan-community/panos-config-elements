@@ -117,7 +117,7 @@ snippets:
         </entry>
 
   - name: internal_interface_layer3
-    xpath: /config/devices/entry[@name='localhost.localdomain']/network/interface
+    xpath: /config/devices/entry[@name='localhost.localdomain']/network/interface/ethernet
     element: |-
       <entry name="{{ intf_internal }}">
         <layer3>
