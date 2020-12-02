@@ -1,3 +1,3 @@
-# panos-config-elements
+# PAN-OS Config Elements
 
-Bits and pieces of panos configurations to be used for solution development
+XML-based config skillets for NGFW and Panorama.
