@@ -211,7 +211,7 @@ snippets:
         </entry>
 
   - name: internal_zone_layer3
-    xpath:
+    xpath: /config/devices/entry[@name="localhost.localdomain"]/vsys/entry[@name="vsys1"]/zone
     element: |-
       <entry name="{{ zone_internal }}">
         <network>
