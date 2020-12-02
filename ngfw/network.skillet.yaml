@@ -222,6 +222,36 @@ snippets:
         </network>
       </entry>
 
+  - name: dhcp_server_layer3
+    xpath: /config/devices/entry[@name="localhost.localdomain"]/network
+    element: |-
+        <dhcp>
+          <interface>
+            <entry name="{{ intf_internal }}">
+              <server>
+                <option>
+                  <lease>
+                    <unlimited/>
+                  </lease>
+                  <gateway>{{ dhcp_server_gateway }}</gateway>
+                  <subnet-mask>{{ dhcp_server_netmask }}</subnet-mask>
+                  <dns>
+                    <primary>inherited</primary>
+                    <secondary>inherited</secondary>
+                  </dns>
+                  <inheritance>
+                    <source>{{ intf_internet }}</source>
+                  </inheritance>
+                </option>
+                <ip-pool>
+                  <member>{{ dhcp_server_pool_range }}</member>
+                </ip-pool>
+                <mode>auto</mode>
+              </server>
+            </entry>
+          </interface>
+        </dhcp>
+
   - name: internal_zone_vlan_layer3
     xpath: /config/devices/entry[@name="localhost.localdomain"]/vsys/entry[@name="vsys1"]/zone
     element: |-

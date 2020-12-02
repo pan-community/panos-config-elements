@@ -28,7 +28,7 @@ snippets:
       - name: internet_zone_layer3
       - name: internal_zone_layer3
       - name: virtual_router_layer3
-      - name: dhcp_server_vlan
+      - name: dhcp_server_layer3
       - name: nat_policy_dipp
 
 
