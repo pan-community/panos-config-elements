@@ -399,14 +399,16 @@ snippets:
           <virtual-wire/>
           <comment>internet interface using vwire</comment>
         </entry>
+      </ethernet>
       
   - name: interface_internal_vwire
     xpath: /config/devices/entry[@name='localhost.localdomain']/network/interface
     element: |-
-          <entry name="{{ intf_internal }}">
-            <virtual-wire/>
-            <comment>internal interface using vwire</comment>
-          </entry>
+      <ethernet>
+        <entry name="{{ intf_internal }}">
+          <virtual-wire/>
+          <comment>internal interface using vwire</comment>
+        </entry>
       </ethernet>
 
   - name: vwire
