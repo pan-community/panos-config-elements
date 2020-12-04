@@ -4,6 +4,13 @@ description: |-
   group of snippets for layer 3 internet gateway configuration
 type: panos
 labels:
+  versions_supported:
+    - 8.0
+    - 8.1
+    - 9.0
+    - 9.1
+    - 10.0
+
   collection:
     - lib
 
@@ -30,5 +37,6 @@ snippets:
       - name: virtual_router_layer3
       - name: dhcp_server_layer3
       - name: nat_policy_dipp
+
 
 

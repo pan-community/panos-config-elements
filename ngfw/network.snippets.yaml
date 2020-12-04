@@ -1,11 +1,7 @@
 name: panos_network_snippets
-label: PAN-OS network snippets
 description: |-
   collection of PAN-OS network config elements
 type: panos
-labels:
-  collection:
-    - lib
 
 variables:
   # internet facing interface and zone
@@ -422,6 +418,7 @@ snippets:
         </nat>
 
   - name: interface_internet_vwire
+    # good to 10.0
     xpath: /config/devices/entry[@name='localhost.localdomain']/network/interface
     element: |-
       <ethernet>
@@ -430,7 +427,18 @@ snippets:
           <comment>internet interface using vwire</comment>
         </entry>
       </ethernet>
-      
+
+  - name: interface_internet_vwire_10_1
+    # use for 10.1 and later
+    xpath: /config/devices/entry[@name='localhost.localdomain']/network/interface
+    element: |-
+      <ethernet>
+        <entry name="{{ intf_internet }}">
+          <virtual-wire/>
+          <comment>internet interface using vwire</comment>
+        </entry>
+      </ethernet>
+
   - name: interface_internal_vwire
     xpath: /config/devices/entry[@name='localhost.localdomain']/network/interface
     element: |-
