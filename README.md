@@ -4,6 +4,9 @@ XML-based config skillets for NGFW and Panorama.
 
 Prototyping the tech library concept to use with caution. Names may change.
 
+> NOTE: various options found in proto_options branch until removed
+> The primary focus is on the snippet groups option
+
 
 ## Config snippet grouping under ngfw 
 
