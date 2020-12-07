@@ -1,0 +1,57 @@
+name: panos_network_snippet_internet_dhcp_client
+description: |-
+  snippets for internet facing dhcp_client and associated zone
+type: panos
+
+variables:
+
+  # internet interface and zone
+  - name: intf_internet
+    description: internet Interface
+    default: ethernet1/1
+    type_hint: dropdown
+    source: interface_names
+  - name: zone_internet
+    description: internet zone name
+    default: internet
+    type_hint: text
+
+snippets:
+
+  - name: internet_interface_dhcpClient
+    xpath: /config/devices/entry[@name="localhost.localdomain"]/network/interface/ethernet
+    element: |-
+        <entry name="{{ intf_internet }}">
+          <layer3>
+            <ndp-proxy>
+              <enabled>no</enabled>
+            </ndp-proxy>
+            <lldp>
+              <enable>no</enable>
+            </lldp>
+            <dhcp-client/>
+            <interface-management-profile>ping-only</interface-management-profile>
+          </layer3>
+        </entry>
+
+  - name: internet_zone_layer3
+    xpath: /config/devices/entry[@name="localhost.localdomain"]/vsys/entry[@name="vsys1"]/zone
+    element: |-
+        <entry name="{{ zone_internet }}">
+          <network>
+            <layer3>
+              <member>{{ intf_internet }}</member>
+            </layer3>
+            <zone-protection-profile>Recommended_Zone_Protection</zone-protection-profile>
+            <log-setting>default</log-setting>
+          </network>
+        </entry>
+
+  - name: virtual_router_add_internet_interface
+    xpath: /config/devices/entry[@name='localhost.localdomain']/network/virtual-router
+    element: |-
+      <entry name="default">
+        <interface>
+          <member>{{ intf_internet }}</member>
+        </interface>
+      </entry>

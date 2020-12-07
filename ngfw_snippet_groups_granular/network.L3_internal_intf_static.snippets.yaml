@@ -1,0 +1,70 @@
+name: panos_network_snippets_layer3_internal
+description: |-
+  collection of PAN-OS network config elements for layer 3 mode.
+  internal interface is configured in static mode
+type: panos
+
+variables:
+
+  # internal interface and zone
+  - name: intf_internal
+    description: internal Interface
+    default: ethernet1/2
+    type_hint: dropdown
+    source: interface_names
+  - name: zone_internal
+    description: internal trust zone name
+    default: internal
+    type_hint: text
+  - name: internal_intf_ipaddr
+    description: internal interface ip address
+    default: 192.168.45.20/24
+    type_hint: text
+
+snippets:
+
+  - name: internal_interface_layer3
+    xpath: /config/devices/entry[@name='localhost.localdomain']/network/interface/ethernet
+    element: |-
+      <entry name="{{ intf_internal }}">
+        <layer3>
+          <ipv6>
+            <neighbor-discovery>
+              <router-advertisement>
+                <enable>no</enable>
+              </router-advertisement>
+            </neighbor-discovery>
+          </ipv6>
+          <ndp-proxy>
+            <enabled>no</enabled>
+          </ndp-proxy>
+          <lldp>
+            <enable>no</enable>
+          </lldp>
+          <interface-management-profile>ping-only</interface-management-profile>
+          <ip>
+            <entry name="{{ internal_intf_ipaddr }}"/>
+          </ip>
+        </layer3>
+      </entry>
+
+  - name: internal_zone_layer3
+    xpath: /config/devices/entry[@name="localhost.localdomain"]/vsys/entry[@name="vsys1"]/zone
+    element: |-
+      <entry name="{{ zone_internal }}">
+        <network>
+         <layer3>
+            <member>{{ intf_internal }}</member>
+          </layer3>
+          <zone-protection-profile>Recommended_Zone_Protection</zone-protection-profile>
+        </network>
+      </entry>
+
+  - name: virtual_router_add_internal_interface
+    xpath: /config/devices/entry[@name='localhost.localdomain']/network/virtual-router
+    element: |-
+      <entry name="default">
+        <interface>
+          <member>{{ intf_internal }}</member>
+        </interface>
+      </entry>

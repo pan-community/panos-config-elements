@@ -1,0 +1,31 @@
+name: panos_layer3_config_group_snippet_groups_granular
+label: PAN-OS layer 3 config group using snippet groups granular reference
+description: |-
+  group of snippets for layer 3 internet gateway configuration
+type: panos
+labels:
+  versions_supported:
+    - 8.0
+    - 8.1
+    - 9.0
+    - 9.1
+    - 10.0
+
+  collection:
+    - lib
+
+snippets:
+
+  - name: layer3_config_group
+    include:
+      - name: panos_network_snippets_intf_mgmt_profile_ping_only
+      - name: panos_network_snippets_layer3_create_virtual_router
+      - name: panos_network_snippet_internet_dhcp_client
+      - name: panos_network_snippets_layer3_internal
+      - name: panos_network_snippets_dhcp_server_basic
+      - name: panos_network_snippets_nat_dipp
+
+
+
+
+

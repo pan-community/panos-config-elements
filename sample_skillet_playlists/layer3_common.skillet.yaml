@@ -1,5 +1,5 @@
-name: panos_layer3_config_group
-label: PAN-OS layer 3 config group
+name: panos_layer3_config_group_common
+label: PAN-OS layer 3 config group using a common snippet file
 description: |-
   group of snippets for layer 3 internet gateway configuration
 type: panos
@@ -17,7 +17,7 @@ labels:
 snippets:
 
   - name: layer3_config_group
-    include: panos_network_snippets
+    include: panos_network_snippets_layer3
     include_variables:
       - name: intf_internet
       - name: zone_internet

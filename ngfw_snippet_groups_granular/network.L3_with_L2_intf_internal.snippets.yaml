@@ -1,0 +1,128 @@
+name: panos_network_snippets_layer3_with_layer2_interfaces
+description: |-
+  collection of PAN-OS network config elements using layer3
+  but includes a vlan interface and multiple internal PHY ports
+type: panos
+
+variables:
+
+  # internal logical L3 interface as a vlan
+  - name: intf_internal
+    description: vlan interface name as vlan.number
+    default: vlan.1
+    type_hint: text
+    help_text: must include the vlan prefix input as vlan.1 or vlan.2
+  - name: vlan_ipaddr
+    description: internal interface ip address
+    default: 192.168.74.1/24
+    type_hint: text
+  - name: vlan_intf_list
+    description: internal Interface
+    default: ethernet1/2
+    type_hint: checkbox
+    source: interface_names
+  # internal zone name used for security policies
+  - name: zone_internal
+    description: internal trust zone name
+    default: internal
+    type_hint: text
+
+  # all internal interfaces in L2 mode assigned to this zone
+  - name: zone_internal_layer2
+    description: internal zone name
+    default: L2_internal
+    type_hint: text
+
+snippets:
+
+  - name: internal_interface_layer2
+    xpath: /config/devices/entry[@name="localhost.localdomain"]/network/interface/ethernet
+    element: |-
+        {%- for item in vlan_intf_list  %}
+        <entry name="{{ item }}">
+          <layer2>
+            <lldp>
+              <enable>no</enable>
+            </lldp>
+          </layer2>
+        </entry>
+        {%- endfor %}
+
+  - name: interface_internal_vlan
+    xpath: /config/devices/entry[@name="localhost.localdomain"]/network/interface
+    element: |-
+        <vlan>
+          <units>
+            <entry name="{{ intf_internal }}">
+              <ipv6>
+                <neighbor-discovery>
+                  <router-advertisement>
+                    <enable>no</enable>
+                  </router-advertisement>
+                </neighbor-discovery>
+              </ipv6>
+              <ndp-proxy>
+                <enabled>no</enabled>
+              </ndp-proxy>
+              <adjust-tcp-mss>
+                <enable>no</enable>
+              </adjust-tcp-mss>
+              <ip>
+                <entry name="{{ vlan_ipaddr }}"/>
+              </ip>
+              <interface-management-profile>ping-only</interface-management-profile>
+            </entry>
+          </units>
+        </vlan>
+
+  - name: vlan_interface_members
+    xpath: /config/devices/entry[@name="localhost.localdomain"]/network
+    element: |-
+        <vlan>
+          <entry name="Vlan">
+            <interface>
+            {%- for item in vlan_intf_list %}
+              <member>{{ item }}</member>
+            {%- endfor %}
+            </interface>
+            <virtual-interface>
+              <interface>{{ intf_internal }}</interface>
+            </virtual-interface>
+          </entry>
+        </vlan>
+
+  - name: internal_zone_vlan_layer3
+    xpath: /config/devices/entry[@name="localhost.localdomain"]/vsys/entry[@name="vsys1"]/zone
+    element: |-
+      <entry name="{{ zone_internal }}">
+        <network>
+         <layer3>
+            <member>{{ intf_internal }}</member>
+          </layer3>
+          <zone-protection-profile>Recommended_Zone_Protection</zone-protection-profile>
+        </network>
+      </entry>
+
+  - name: internal_zone_layer2
+    xpath: /config/devices/entry[@name="localhost.localdomain"]/vsys/entry[@name="vsys1"]/zone
+    element: |-
+        <entry name="{{ zone_internal_layer2 }}">
+          <network>
+            <layer2>
+              {%- for item in vlan_intf_list %}
+              <member>{{ item }}</member>
+              {%- endfor %}
+            </layer2>
+            <log-setting>default</log-setting>
+          </network>
+        </entry>
+
+  # required default virtual router base configuration. this only adds the new interface
+  - name: virtual_router
+    xpath: /config/devices/entry[@name="localhost.localdomain"]/network/virtual-router
+    element: |-
+      <entry name="default">
+        <interface>
+          <member>{{ intf_internal }}</member>
+        </interface>
+      </entry>

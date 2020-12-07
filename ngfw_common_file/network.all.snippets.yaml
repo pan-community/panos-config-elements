@@ -4,6 +4,13 @@ description: |-
 type: panos
 
 variables:
+
+  # note: there is variance here in how the ethernet vs vlan interfaces are captured and used as the internal intf var
+  # ethernet var is text and sources from a list of phy interfaces as part of a workflow
+  # vlan L3 var is a number with a unique name resulting in unique snippets for virtual router, dhcp server, etc
+  # the vlan L2 snippet is where the phy interfaces are captured in a checkbox
+  # during this proto period the separate files have been normalized with the vlan L3 interface as a text string
+
   # internet facing interface and zone
   - name: intf_internet
     description: internet Interface
@@ -21,6 +28,12 @@ variables:
     default: ethernet1/2
     type_hint: dropdown
     source: interface_names
+
+  # internal interface ip addr
+  - name: internal_intf_ipaddr
+    description: internal interface ip address
+    default: 192.168.45.20/24
+    type_hint: text
 
   # internal logical L3 interface as a vlan
   - name: intf_internal_vlan
@@ -69,10 +82,7 @@ variables:
     description: dhcp pool ip address range
     default: 192.168.74.2-192.168.74.100
     type_hint: text
-  - name: internal_intf_ipaddr
-    description: internal interface ip address
-    default: 192.168.45.20/24
-    type_hint: text
+
 
 snippets:
   - name: internal_interface_management_profile
