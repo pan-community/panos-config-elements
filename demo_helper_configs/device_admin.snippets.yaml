@@ -1,0 +1,25 @@
+name: panos_demo_snippets_device_admin
+description: |-
+  collection of PAN-OS config snippets specific to demo type deployments
+type: panos
+
+variables:
+
+
+
+snippets:
+
+    # set idle timeout to 60 minutes
+-   name: panos_idle_timeout_60min
+    xpath: /config/devices/entry[@name='localhost.localdomain']/deviceconfig/setting
+    element: |-
+      <management>
+        <idle-timeout>60</idle-timeout>
+      </management>
+
+    # custom login banner for demo configurations
+-   name: panos_login_banner_demo
+    xpath: /config/devices/entry[@name='localhost.localdomain']/deviceconfig/system
+    element: |-
+      <login-banner>You have accessed a user demo system.
+      Log off immediately if you are not an authorized user.</login-banner>

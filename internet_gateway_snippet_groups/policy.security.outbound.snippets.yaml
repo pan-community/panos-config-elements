@@ -1,0 +1,335 @@
+name: panos_policy_snippets_outbound_security_rules
+description: |-
+  collection of PAN-OS config snippets for basic Internet gateway security policy
+type: panos
+
+# the snippets below reference IronSkillet objects: default profile group and the default logging profile
+
+variables:
+
+  # designed to be part of a workflow that creates selection lists when used in tool like panHandler
+  - name: zone_internal
+    description: internal zone
+    default: internal
+    type_hint: dropdown
+    source: zones_list
+
+  - name: zone_internet
+    description: internet zone name
+    default: internet
+    type_hint: dropdown
+    source: zones_list
+
+snippets:
+
+  # rule specific profile group ignoring url-filtering
+  # the security policy uses the url category unknown with strict file blocking
+  - name: profile_group_unknown_url
+    xpath: /config/devices/entry[@name='localhost.localdomain']/vsys/entry[@name='vsys1']/profile-group
+    element: |-
+      <entry name="Outbound-Unknown-URL">
+        <virus>
+          <member>Outbound-AV</member>
+        </virus>
+        <spyware>
+          <member>Outbound-AS</member>
+        </spyware>
+        <vulnerability>
+          <member>Outbound-VP</member>
+        </vulnerability>
+        <file-blocking>
+          <member>strict file blocking</member>
+        </file-blocking>
+        <wildfire-analysis>
+          <member>Outbound-WF</member>
+        </wildfire-analysis>
+      </entry>
+
+  # adding visual tags for these policies
+  - name: policy_tags
+    xpath: /config/devices/entry[@name='localhost.localdomain']/vsys/entry[@name='vsys1']/tag
+    element: |-
+      <entry name="InternetGateway">
+      	<color>color4</color>
+      </entry>
+
+  - name: security_rules-security-rules-block-quic
+    xpath: /config/devices/entry[@name='localhost.localdomain']/vsys/entry[@name='vsys1']/rulebase/security/rules
+    element: |-
+        <entry name="HS-block-quic">
+          <to>
+            <member>{{ zone_internet }}</member>
+          </to>
+          <from>
+            <member>{{ zone_internal }}</member>
+          </from>
+          <source>
+            <member>any</member>
+          </source>
+          <destination>
+            <member>any</member>
+          </destination>
+          <source-user>
+            <member>any</member>
+          </source-user>
+          <category>
+            <member>any</member>
+          </category>
+          <application>
+            <member>quic</member>
+          </application>
+          <service>
+            <member>application-default</member>
+          </service>
+          <hip-profiles>
+            <member>any</member>
+          </hip-profiles>
+          <action>deny</action>
+          <description>blocks quic and forces use of standard ssl for web sessio
+      ns to help capture url values of encrypted sessions</description>
+          <log-setting>default</log-setting>
+           <tag>
+             <member>InternetGateway</member>
+           </tag>
+        </entry>
+
+  # uses unknown url category in the policy for more aggressive file blocking
+  # requires the profile group Outbound-Unknown-URL - see snippet above
+  - name: security_rules-security-rules-unknown-url-strict
+    xpath: /config/devices/entry[@name='localhost.localdomain']/vsys/entry[@name='vsys1']/rulebase/security/rules
+    element: |-
+      <entry name="HS-no-unknown-URL-xfer">
+        <profile-setting>
+          <group>
+            <member>Outbound-Unknown-URL</member>
+          </group>
+        </profile-setting>
+        <to>
+          <member>{{ zone_internet }}</member>
+        </to>
+        <from>
+          <member>{{ zone_internal }}</member>
+        </from>
+        <source>
+          <member>any</member>
+        </source>
+        <destination>
+          <member>any</member>
+        </destination>
+        <source-user>
+          <member>any</member>
+        </source-user>
+        <category>
+          <member>unknown</member>
+        </category>
+        <application>
+          <member>any</member>
+        </application>
+        <service>
+          <member>application-default</member>
+        </service>
+        <hip-profiles>
+          <member>any</member>
+        </hip-profiles>
+        <action>allow</action>
+        <log-end>yes</log-end>
+        <log-setting>default</log-setting>
+        <description>This rule prevents the download of WF supported and risky file types from unknown category
+URL's.</description>
+         <tag>
+           <member>InternetGateway</member>
+         </tag>
+      </entry>
+
+  # basic outbound rule with app-default enabled
+  - name: security_rules-security-rules-unknown-url-strict
+    xpath: /config/devices/entry[@name='localhost.localdomain']/vsys/entry[@name='vsys1']/rulebase/security/rules
+    element: |-
+      <entry name="HS-allow-outbound">
+        <to>
+          <member>{{ zone_internet }}</member>
+        </to>
+        <from>
+          <member>{{ zone_internal }}</member>
+        </from>
+        <source>
+          <member>any</member>
+        </source>
+        <destination>
+          <member>any</member>
+        </destination>
+        <source-user>
+          <member>any</member>
+        </source-user>
+        <category>
+          <member>any</member>
+        </category>
+        <application>
+          <member>any</member>
+        </application>
+        <service>
+          <member>application-default</member>
+        </service>
+        <hip-profiles>
+          <member>any</member>
+        </hip-profiles>
+        <action>allow</action>
+        <log-end>yes</log-end>
+        <log-setting>default</log-setting>
+        <profile-setting>
+          <group>
+            <member>Outbound</member>
+          </group>
+        </profile-setting>
+        <description>This is a general rule to allow trust to untrust traffic. It uses application defaults to p
+revent applications from running on non-default undefined ports. This is part of the App-ID support in the firew
+all</description>
+         <tag>
+           <member>InternetGateway</member>
+         </tag>
+      </entry>
+
+  # basic outbound rule allowing non default SSL ports
+  # may be required for custom-demo type apps
+  - name: security_rules-security-rules-non-default-ssl
+    xpath: /config/devices/entry[@name='localhost.localdomain']/vsys/entry[@name='vsys1']/rulebase/security/rules
+    element: |-
+      <entry name="HS-non-def-SSL-ports">
+        <to>
+          <member>{{ zone_internet }}</member>
+        </to>
+        <from>
+          <member>{{ zone_internal }}</member>
+        </from>
+        <source>
+          <member>any</member>
+        </source>
+        <destination>
+          <member>any</member>
+        </destination>
+        <source-user>
+          <member>any</member>
+        </source-user>
+        <category>
+          <member>any</member>
+        </category>
+        <application>
+          <member>ssl</member>
+        </application>
+        <service>
+          <member>any</member>
+        </service>
+        <hip-profiles>
+          <member>any</member>
+        </hip-profiles>
+        <action>allow</action>
+        <log-end>yes</log-end>
+        <log-setting>default</log-setting>
+        <profile-setting>
+          <group>
+            <member>Outbound</member>
+          </group>
+        </profile-setting>
+        <description>This is a complement to the allow-outbound rule to ensure sessions can be established and t
+he proper application determined. Once determined, the session will shift to the allow-outbound rule.</description>
+         <tag>
+           <member>InternetGateway</member>
+         </tag>
+      </entry>
+
+  # basic outbound rule allowing non default web browsing ports
+  # may be required for custom-demo type apps
+  - name: security_rules-security-rules-non-default-web
+    xpath: /config/devices/entry[@name='localhost.localdomain']/vsys/entry[@name='vsys1']/rulebase/security/rules
+    element: |-
+      <entry name="HS-non-def-web-ports">
+        <to>
+          <member>{{ zone_internet }}</member>
+        </to>
+        <from>
+          <member>{{ zone_internal }}</member>
+        </from>
+        <source>
+          <member>any</member>
+        </source>
+        <destination>
+          <member>any</member>
+        </destination>
+        <source-user>
+          <member>any</member>
+        </source-user>
+        <category>
+          <member>any</member>
+        </category>
+        <application>
+          <member>web-browsing</member>
+        </application>
+        <service>
+          <member>any</member>
+        </service>
+        <hip-profiles>
+          <member>any</member>
+        </hip-profiles>
+        <action>allow</action>
+        <log-end>yes</log-end>
+        <log-setting>default</log-setting>
+        <profile-setting>
+          <group>
+            <member>Outbound</member>
+          </group>
+        </profile-setting>
+        <description>Provide visibility for non-default web browsing applications. Will provide security profile
+ coverage and will allow based if a non-default port for the application. VISIBILITY ONLY and not app evasion.</description>
+         <tag>
+           <member>InternetGateway</member>
+         </tag>
+      </entry>
+
+  # basic outbound rule allowing non default apps
+  # may be required for custom-demo type apps or used to help identify non default apps
+  # disable or ignore for a stronger security posture
+  - name: security_rules-security-rules-non-default-apps
+    xpath: /config/devices/entry[@name='localhost.localdomain']/vsys/entry[@name='vsys1']/rulebase/security/rules
+    element: |-
+      <entry name="HS-find-non-def-apps">
+        <to>
+          <member>{{ zone_internet }}</member>
+        </to>
+        <from>
+          <member>{{ zone_internal }}</member>
+        </from>
+        <source>
+          <member>any</member>
+        </source>
+        <destination>
+          <member>any</member>
+        </destination>
+        <source-user>
+          <member>any</member>
+        </source-user>
+        <category>
+          <member>any</member>
+        </category>
+        <application>
+          <member>any</member>
+        </application>
+        <service>
+          <member>any</member>
+        </service>
+        <hip-profiles>
+          <member>any</member>
+        </hip-profiles>
+        <action>allow</action>
+        <profile-setting>
+          <group>
+            <member>Outbound</member>
+          </group>
+        </profile-setting>
+        <description>This is a temporary safety net rule to find apps not on non-default ports. It still has the
+ Gold security profile to look for threats, block bad URL's, and send files to WF.</description>
+          <tag>
+           <member>InternetGateway</member>
+         </tag>
+        <log-end>yes</log-end>
+        <log-setting>default</log-setting>
+      </entry>
