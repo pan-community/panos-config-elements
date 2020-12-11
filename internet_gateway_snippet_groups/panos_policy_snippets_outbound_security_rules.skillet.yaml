@@ -56,42 +56,41 @@ snippets:
   - name: security_rules-security-rules-block-quic
     xpath: /config/devices/entry[@name='localhost.localdomain']/vsys/entry[@name='vsys1']/rulebase/security/rules
     element: |-
-        <entry name="HS-block-quic">
-          <to>
-            <member>{{ zone_internet }}</member>
-          </to>
-          <from>
-            <member>{{ zone_internal }}</member>
-          </from>
-          <source>
-            <member>any</member>
-          </source>
-          <destination>
-            <member>any</member>
-          </destination>
-          <source-user>
-            <member>any</member>
-          </source-user>
-          <category>
-            <member>any</member>
-          </category>
-          <application>
-            <member>quic</member>
-          </application>
-          <service>
-            <member>application-default</member>
-          </service>
-          <hip-profiles>
-            <member>any</member>
-          </hip-profiles>
-          <action>deny</action>
-          <description>blocks quic and forces use of standard ssl for web sessio
-      ns to help capture url values of encrypted sessions</description>
-          <log-setting>default</log-setting>
-           <tag>
-             <member>InternetGateway</member>
-           </tag>
-        </entry>
+      <entry name="HS-block-quic">
+        <to>
+          <member>{{ zone_internet }}</member>
+        </to>
+        <from>
+          <member>{{ zone_internal }}</member>
+        </from>
+        <source>
+          <member>any</member>
+        </source>
+        <destination>
+          <member>any</member>
+        </destination>
+        <source-user>
+          <member>any</member>
+        </source-user>
+        <category>
+          <member>any</member>
+        </category>
+        <application>
+          <member>quic</member>
+        </application>
+        <service>
+          <member>application-default</member>
+        </service>
+        <hip-profiles>
+          <member>any</member>
+        </hip-profiles>
+        <action>deny</action>
+        <description>blocks quic and forces use of standard ssl for web sessions to help capture url values of encrypted sessions</description>
+        <log-setting>default</log-setting>
+         <tag>
+           <member>InternetGateway</member>
+         </tag>
+      </entry>
 
   # uses unknown url category in the policy for more aggressive file blocking
   # requires the profile group Outbound-Unknown-URL - see snippet above
@@ -134,8 +133,7 @@ snippets:
         <action>allow</action>
         <log-end>yes</log-end>
         <log-setting>default</log-setting>
-        <description>This rule prevents the download of WF supported and risky file types from unknown category
-URL's.</description>
+        <description>This rule prevents the download of WF supported and risky file types from unknown category URL's.</description>
          <tag>
            <member>InternetGateway</member>
          </tag>
@@ -181,9 +179,7 @@ URL's.</description>
             <member>Outbound</member>
           </group>
         </profile-setting>
-        <description>This is a general rule to allow trust to untrust traffic. It uses application defaults to p
-revent applications from running on non-default undefined ports. This is part of the App-ID support in the firew
-all</description>
+        <description>This is a general rule to allow trust to untrust traffic. It uses application defaults to prevent applications from running on non-default undefined ports. This is part of the App-ID support in the firewall</description>
          <tag>
            <member>InternetGateway</member>
          </tag>
@@ -230,8 +226,7 @@ all</description>
             <member>Outbound</member>
           </group>
         </profile-setting>
-        <description>This is a complement to the allow-outbound rule to ensure sessions can be established and t
-he proper application determined. Once determined, the session will shift to the allow-outbound rule.</description>
+        <description>This is a complement to the allow-outbound rule to ensure sessions can be established and the proper application determined. Once determined, the session will shift to the allow-outbound rule.</description>
          <tag>
            <member>InternetGateway</member>
          </tag>
@@ -278,8 +273,7 @@ he proper application determined. Once determined, the session will shift to the
             <member>Outbound</member>
           </group>
         </profile-setting>
-        <description>Provide visibility for non-default web browsing applications. Will provide security profile
- coverage and will allow based if a non-default port for the application. VISIBILITY ONLY and not app evasion.</description>
+        <description>Provide visibility for non-default web browsing applications. Will provide security profile coverage and will allow based if a non-default port for the application. VISIBILITY ONLY and not app evasion.</description>
          <tag>
            <member>InternetGateway</member>
          </tag>
@@ -325,11 +319,11 @@ he proper application determined. Once determined, the session will shift to the
             <member>Outbound</member>
           </group>
         </profile-setting>
-        <description>This is a temporary safety net rule to find apps not on non-default ports. It still has the
- Gold security profile to look for threats, block bad URL's, and send files to WF.</description>
+        <description>This is a temporary safety net rule to find apps not on non-default ports. It still has the Gold security profile to look for threats, block bad URL's, and send files to WF.</description>
           <tag>
            <member>InternetGateway</member>
          </tag>
         <log-end>yes</log-end>
         <log-setting>default</log-setting>
       </entry>
+
