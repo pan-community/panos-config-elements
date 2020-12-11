@@ -37,12 +37,6 @@ variables:
     default: 192.168.74.2-192.168.74.100
     type_hint: text
 
-  # hidden dhcpServer created var
-  - name: dhcpGateway
-    description: hidden var that will be a parse of the interface address
-    type_hint: hidden
-
-
 snippets:
 
   - name: dhcp_server_basic
@@ -56,8 +50,7 @@ snippets:
                   <lease>
                     <unlimited/>
                   </lease>
-                  {%- set dhcpGateway = internal_intf_ipaddr.split('\')[0] %}
-                  <gateway>{{ dhcpGateway }}</gateway>
+                  <gateway>{{ internal_intf_ipaddr }}</gateway>
                   <subnet-mask>{{ dhcp_server_netmask }}</subnet-mask>
                   <dns>
                     <primary>inherited</primary>
