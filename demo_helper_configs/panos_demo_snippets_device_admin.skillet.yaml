@@ -1,7 +1,11 @@
 name: panos_demo_snippets_device_admin
+label: demo setup config snippets
 description: |-
   collection of PAN-OS config snippets specific to demo type deployments
 type: panos
+labels:
+  collection:
+    - lib
 
 variables:
 
