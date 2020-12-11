@@ -1,7 +1,11 @@
 name: panos_network_snippets_vwire
+label: basic vwire network configuration
 description: |-
   collection of PAN-OS network config elements for a virtual wire
 type: panos
+labels:
+  collection:
+    - lib
 
 variables:
   # internet interface and zone

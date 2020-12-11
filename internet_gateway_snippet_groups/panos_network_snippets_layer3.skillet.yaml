@@ -1,8 +1,12 @@
 name: panos_network_snippets_layer3
+label: Layer 3 two interface and zone snippets
 description: |-
   collection of PAN-OS network config elements for layer 3 mode.
   internet interface is a dhcp client and internal is static
 type: panos
+labels:
+  collection:
+    - lib
 
 variables:
   # internet interface and zone

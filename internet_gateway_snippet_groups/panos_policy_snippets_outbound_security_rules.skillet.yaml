@@ -1,7 +1,11 @@
 name: panos_policy_snippets_outbound_security_rules
+label: Internet gateway sample security policies
 description: |-
   collection of PAN-OS config snippets for basic Internet gateway security policy
 type: panos
+labels:
+  collection:
+    - lib
 
 # the snippets below reference IronSkillet objects: default profile group and the default logging profile
 

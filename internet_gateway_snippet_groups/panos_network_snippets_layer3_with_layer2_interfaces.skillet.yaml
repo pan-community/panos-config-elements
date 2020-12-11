@@ -1,8 +1,12 @@
 name: panos_network_snippets_layer3_with_layer2_interfaces
+label: Layer 3 mode with layer 2 interfaces
 description: |-
   collection of PAN-OS network config elements using layer3
   but includes a vlan interface and multiple internal PHY ports
 type: panos
+labels:
+  collection:
+    - lib
 
 variables:
   # internet facing interface and zone

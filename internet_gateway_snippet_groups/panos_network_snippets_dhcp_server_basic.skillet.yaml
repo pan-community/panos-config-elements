@@ -1,7 +1,11 @@
 name: panos_network_snippets_dhcp_server_basic
+label: basic DHCP server configuration
 description: |-
   collection of PAN-OS network config elements for a basic DHCP server configuration
 type: panos
+labels:
+  collection:
+    - lib
 
 variables:
 
