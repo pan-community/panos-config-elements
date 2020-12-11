@@ -37,6 +37,11 @@ variables:
     default: 192.168.74.2-192.168.74.100
     type_hint: text
 
+  # hidden dhcpServer created var
+  - name: dhcpGateway
+    description: hidden var that will be a parse of the interface address
+    type_hint: hidden
+
 
 snippets:
 
