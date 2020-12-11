@@ -51,7 +51,7 @@ snippets:
                   <lease>
                     <unlimited/>
                   </lease>
-                  <gateway>{{ internal_intf_ipaddr.split('\') }}</gateway>
+                  <gateway>{{ internal_intf_ipaddr.split('\')[0] }}</gateway>
                   <subnet-mask>{{ dhcp_server_netmask }}</subnet-mask>
                   <dns>
                     <primary>inherited</primary>
