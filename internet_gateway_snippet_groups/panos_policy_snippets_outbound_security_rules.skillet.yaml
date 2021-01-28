@@ -60,7 +60,7 @@ snippets:
   - name: security_rules-security-rules-block-quic
     xpath: /config/devices/entry[@name='localhost.localdomain']/vsys/entry[@name='vsys1']/rulebase/security/rules
     element: |-
-      <entry name="HS-block-quic">
+      <entry name="block-quic">
         <to>
           <member>{{ zone_internet }}</member>
         </to>
@@ -101,7 +101,7 @@ snippets:
   - name: security_rules-security-rules-unknown-url-strict
     xpath: /config/devices/entry[@name='localhost.localdomain']/vsys/entry[@name='vsys1']/rulebase/security/rules
     element: |-
-      <entry name="HS-no-unknown-URL-xfer">
+      <entry name="no-unknown-URL-xfer">
         <profile-setting>
           <group>
             <member>Outbound-Unknown-URL</member>
@@ -147,7 +147,7 @@ snippets:
   - name: security_rules-security-rules-unknown-url-strict
     xpath: /config/devices/entry[@name='localhost.localdomain']/vsys/entry[@name='vsys1']/rulebase/security/rules
     element: |-
-      <entry name="HS-allow-outbound">
+      <entry name="allow-outbound">
         <to>
           <member>{{ zone_internet }}</member>
         </to>
@@ -194,7 +194,7 @@ snippets:
   - name: security_rules-security-rules-non-default-ssl
     xpath: /config/devices/entry[@name='localhost.localdomain']/vsys/entry[@name='vsys1']/rulebase/security/rules
     element: |-
-      <entry name="HS-non-def-SSL-ports">
+      <entry name="non-def-SSL-ports">
         <to>
           <member>{{ zone_internet }}</member>
         </to>
@@ -241,7 +241,7 @@ snippets:
   - name: security_rules-security-rules-non-default-web
     xpath: /config/devices/entry[@name='localhost.localdomain']/vsys/entry[@name='vsys1']/rulebase/security/rules
     element: |-
-      <entry name="HS-non-def-web-ports">
+      <entry name="non-def-web-ports">
         <to>
           <member>{{ zone_internet }}</member>
         </to>
@@ -289,7 +289,7 @@ snippets:
   - name: security_rules-security-rules-non-default-apps
     xpath: /config/devices/entry[@name='localhost.localdomain']/vsys/entry[@name='vsys1']/rulebase/security/rules
     element: |-
-      <entry name="HS-find-non-def-apps">
+      <entry name="find-non-def-apps">
         <to>
           <member>{{ zone_internet }}</member>
         </to>
