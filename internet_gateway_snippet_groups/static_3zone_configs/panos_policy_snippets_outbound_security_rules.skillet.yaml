@@ -299,58 +299,6 @@ snippets:
          </tag>
       </entry>
 
-  # for the three zone configuration with an added dmz zone
-  - name: security_rules-internal-to-dmz
-    xpath:
-    element: |-
-      <entry name="internal-to-dmz">
-        <to>
-          <member>{{ zone_internal }}</member>
-        </to>
-        <from>
-          <member>{{ zone_dmz }}</member>
-        </from>
-        <source>
-          <member>any</member>
-        </source>
-        <destination>
-          <member>any</member>
-        </destination>
-        <source-user>
-          <member>any</member>
-        </source-user>
-        <category>
-          <member>any</member>
-        </category>
-        <application>
-          <member>any</member>
-        </application>
-        <service>
-          <member>any</member>
-        </service>
-        <hip-profiles>
-          <member>any</member>
-        </hip-profiles>
-        <action>allow</action>
-        <profile-setting>
-          <group>
-            <member>Outbound</member>
-          </group>
-        </profile-setting>
-        <description>allow routing from more secure internal to less secure dmz zone</description>
-        <tag>
-          <member>internal2dmz</member>
-        </tag>
-        <log-end>yes</log-end>
-        <log-setting>default</log-setting>
-        <source-hip>
-          <member>any</member>
-        </source-hip>
-        <destination-hip>
-          <member>any</member>
-        </destination-hip>
-      </entry>
-
   # basic outbound rule allowing non default apps
   # may be required for custom-demo type apps or used to help identify non default apps
   # disable or ignore for a stronger security posture
@@ -400,3 +348,54 @@ snippets:
         <log-setting>default</log-setting>
       </entry>
 
+  # for the three zone configuration with an added dmz zone
+  - name: security_rules-internal-to-dmz
+    xpath: /config/devices/entry[@name='localhost.localdomain']/vsys/entry[@name='vsys1']/rulebase/security/rules
+    element: |-
+      <entry name="internal-to-dmz">
+        <to>
+          <member>{{ zone_internal }}</member>
+        </to>
+        <from>
+          <member>{{ zone_dmz }}</member>
+        </from>
+        <source>
+          <member>any</member>
+        </source>
+        <destination>
+          <member>any</member>
+        </destination>
+        <source-user>
+          <member>any</member>
+        </source-user>
+        <category>
+          <member>any</member>
+        </category>
+        <application>
+          <member>any</member>
+        </application>
+        <service>
+          <member>any</member>
+        </service>
+        <hip-profiles>
+          <member>any</member>
+        </hip-profiles>
+        <action>allow</action>
+        <profile-setting>
+          <group>
+            <member>Outbound</member>
+          </group>
+        </profile-setting>
+        <description>allow routing from more secure internal to less secure dmz zone</description>
+        <tag>
+          <member>internal2dmz</member>
+        </tag>
+        <log-end>yes</log-end>
+        <log-setting>default</log-setting>
+        <source-hip>
+          <member>any</member>
+        </source-hip>
+        <destination-hip>
+          <member>any</member>
+        </destination-hip>
+      </entry>
