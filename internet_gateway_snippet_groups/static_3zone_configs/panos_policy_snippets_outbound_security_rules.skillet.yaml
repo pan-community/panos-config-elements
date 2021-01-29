@@ -354,10 +354,10 @@ snippets:
     element: |-
       <entry name="internal-to-dmz">
         <to>
-          <member>{{ zone_internal }}</member>
+          <member>{{ zone_dmz }}</member>
         </to>
         <from>
-          <member>{{ zone_dmz }}</member>
+          <member>{{ zone_internal }}</member>
         </from>
         <source>
           <member>any</member>
