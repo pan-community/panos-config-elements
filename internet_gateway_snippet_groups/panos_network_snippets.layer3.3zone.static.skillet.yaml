@@ -1,0 +1,243 @@
+name: panos_network_snippets_layer3_3zone_static
+label: Layer 3 three static interface and zone snippets
+description: |-
+  collection of PAN-OS network config elements for layer 3 mode.
+  3 static interfaces and zones - internet, internal, and dmz
+type: panos
+labels:
+  collection:
+    - lib
+
+variables:
+  # internet interface and zone
+  - name: intf_internet
+    description: internet Interface
+    default: ethernet1/1
+    type_hint: dropdown
+    source: interface_names
+  - name: internet_intf_ipaddr
+    description: internet interface ip address
+    default: 192.168.1.1/24
+    type_hint: text
+  - name: zone_internet
+    description: internet zone name
+    default: internet
+    type_hint: text
+
+  # internal interface and zone
+  - name: intf_internal
+    description: internal Interface
+    default: ethernet1/2
+    type_hint: dropdown
+    source: interface_names
+  - name: internal_intf_ipaddr
+    description: internal interface ip address
+    default: 192.168.2.1/24
+    type_hint: text
+  - name: zone_internal
+    description: internal zone name
+    default: internal
+    type_hint: text
+  - name: internal_intf_ipaddr
+    description: internal interface ip address
+    default: 192.168.2.1/24
+    type_hint: text
+
+  # dmz interface and zone
+  - name: intf_dmz
+    description: dmz Interface
+    default: ethernet1/3
+    type_hint: dropdown
+    source: interface_names
+  - name: dmz_intf_ipaddr
+    description: dmz interface ip address
+    default: 192.168.3.1/24
+    type_hint: text
+  - name: zone_dmz
+    description: dmz zone name
+    default: dmz
+    type_hint: text
+
+  # ngfw dataplane default gateway
+  - name: dataplane_default_gateway
+    description: routing default gateway for dataplane traffic
+    default: 192.168.1.254
+    type_hint: ip_addr
+
+snippets:
+  - name: interface_management_profile_ping_only
+    xpath: /config/devices/entry[@name="localhost.localdomain"]/network/profiles
+    element: |-
+        <interface-management-profile>
+          <entry name="ping-only">
+            <ping>yes</ping>
+            <response-pages>yes</response-pages>
+          </entry>
+        </interface-management-profile>
+
+  - name: internet_interface_layer3_static
+    xpath: /config/devices/entry[@name="localhost.localdomain"]/network/interface/ethernet
+    element: |-
+      <entry name="{{ intf_internet }}">
+        <layer3>
+          <ipv6>
+            <neighbor-discovery>
+              <router-advertisement>
+                <enable>no</enable>
+              </router-advertisement>
+            </neighbor-discovery>
+          </ipv6>
+          <ndp-proxy>
+            <enabled>no</enabled>
+          </ndp-proxy>
+          <lldp>
+            <enable>no</enable>
+          </lldp>
+          <interface-management-profile>ping-only</interface-management-profile>
+          <ip>
+            <entry name="{{ internet_intf_ipaddr }}"/>
+          </ip>
+        </layer3>
+      </entry>
+
+  - name: internet_zone_layer3
+    xpath: /config/devices/entry[@name="localhost.localdomain"]/vsys/entry[@name="vsys1"]/zone
+    element: |-
+        <entry name="{{ zone_internet }}">
+          <network>
+            <layer3>
+              <member>{{ intf_internet }}</member>
+            </layer3>
+            <zone-protection-profile>Recommended_Zone_Protection</zone-protection-profile>
+            <log-setting>default</log-setting>
+          </network>
+        </entry>
+
+  - name: internal_interface_layer3_static
+    xpath: /config/devices/entry[@name='localhost.localdomain']/network/interface/ethernet
+    element: |-
+      <entry name="{{ intf_internal }}">
+        <layer3>
+          <ipv6>
+            <neighbor-discovery>
+              <router-advertisement>
+                <enable>no</enable>
+              </router-advertisement>
+            </neighbor-discovery>
+          </ipv6>
+          <ndp-proxy>
+            <enabled>no</enabled>
+          </ndp-proxy>
+          <lldp>
+            <enable>no</enable>
+          </lldp>
+          <interface-management-profile>ping-only</interface-management-profile>
+          <ip>
+            <entry name="{{ internal_intf_ipaddr }}"/>
+          </ip>
+        </layer3>
+      </entry>
+
+  - name: internal_zone_layer3
+    xpath: /config/devices/entry[@name="localhost.localdomain"]/vsys/entry[@name="vsys1"]/zone
+    element: |-
+      <entry name="{{ zone_internal }}">
+        <network>
+         <layer3>
+            <member>{{ intf_internal }}</member>
+          </layer3>
+          <zone-protection-profile>Recommended_Zone_Protection</zone-protection-profile>
+        </network>
+      </entry>
+
+  - name: dmz_interface_layer3_static
+    xpath: /config/devices/entry[@name='localhost.localdomain']/network/interface/ethernet
+    element: |-
+      <entry name="{{ intf_dmz }}">
+        <layer3>
+          <ipv6>
+            <neighbor-discovery>
+              <router-advertisement>
+                <enable>no</enable>
+              </router-advertisement>
+            </neighbor-discovery>
+          </ipv6>
+          <ndp-proxy>
+            <enabled>no</enabled>
+          </ndp-proxy>
+          <lldp>
+            <enable>no</enable>
+          </lldp>
+          <interface-management-profile>ping-only</interface-management-profile>
+          <ip>
+            <entry name="{{ dmz_intf_ipaddr }}"/>
+          </ip>
+        </layer3>
+      </entry>
+
+  - name: dmz_zone_layer3
+    xpath: /config/devices/entry[@name="localhost.localdomain"]/vsys/entry[@name="vsys1"]/zone
+    element: |-
+      <entry name="{{ zone_dmz }}">
+        <network>
+         <layer3>
+            <member>{{ intf_dmz }}</member>
+          </layer3>
+          <zone-protection-profile>Recommended_Zone_Protection</zone-protection-profile>
+        </network>
+      </entry>
+
+  - name: virtual_router
+    xpath: /config/devices/entry[@name='localhost.localdomain']/network/virtual-router
+    element: |-
+      <entry name="default">
+        <protocol>
+          <bgp>
+            <enable>no</enable>
+            <dampening-profile>
+              <entry name="default">
+                <cutoff>1.25</cutoff>
+                <reuse>0.5</reuse>
+                <max-hold-time>900</max-hold-time>
+                <decay-half-life-reachable>300</decay-half-life-reachable>
+                <decay-half-life-unreachable>900</decay-half-life-unreachable>
+                <enable>yes</enable>
+              </entry>
+            </dampening-profile>
+            <routing-options>
+              <graceful-restart>
+                <enable>yes</enable>
+              </graceful-restart>
+            </routing-options>
+          </bgp>
+        </protocol>
+        <interface>
+          <member>{{ intf_internet }}</member>
+          <member>{{ intf_internal }}</member>
+          <member>{{ intf_dmz }}</member>
+        </interface>
+        <ecmp>
+          <algorithm>
+            <ip-modulo/>
+          </algorithm>
+        </ecmp>
+        <routing-table>
+          <ip>
+            <static-route>
+              <entry name="gateway">
+                <nexthop>
+                  <ip-address>{{ dataplane_default_gateway }}</ip-address>
+                </nexthop>
+                <bfd>
+                  <profile>None</profile>
+                </bfd>
+                <metric>10</metric>
+                <destination>0.0.0.0/0</destination>
+                <route-table>
+                  <unicast/>
+                </route-table>
+              </entry>
+            </static-route>
+          </ip>
+        </routing-table>
+      </entry>
