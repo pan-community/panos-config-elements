@@ -1,0 +1,64 @@
+name: panos_network_snippets_nat_dipp_dual_source
+label: Outbound two source zone dynamic port - DIPP - configuration
+description: |-
+  collection of PAN-OS network config elements for basic outbound NAT using DIPP.
+  dual source internal and dmz zones
+type: panos
+labels:
+  collection:
+    - lib
+
+variables:
+  # internet facing interface and zone
+  - name: intf_internet
+    description: internet Interface
+    default: ethernet1/1
+    type_hint: dropdown
+    source: interface_names
+  - name: zone_internet
+    description: internet zone name
+    default: internet
+    type_hint: text
+
+  # internal zone name
+  - name: zone_internal
+    description: internal zone name
+    default: internal
+    type_hint: text
+  - name: zone_dmz
+    description: dmz zone name
+    default: dmz
+    type_hint: text
+
+snippets:
+
+  - name: nat_policy_dipp
+    xpath: /config/devices/entry[@name="localhost.localdomain"]/vsys/entry[@name="vsys1"]/rulebase
+    element: |-
+        <nat>
+          <rules>
+            <entry name="internet" >
+              <source-translation>
+                <dynamic-ip-and-port>
+                  <interface-address>
+                    <interface>{{ intf_internet }}</interface>
+                  </interface-address>
+                </dynamic-ip-and-port>
+              </source-translation>
+              <to>
+                <member>{{ zone_internet }}</member>
+              </to>
+              <from>
+                <member>{{ zone_internal }}</member>
+                <member>{{ zone_dmz }}</member>
+              </from>
+              <source>
+                <member>any</member>
+              </source>
+              <destination>
+                <member>any</member>
+              </destination>
+              <service>any</service>
+            </entry>
+          </rules>
+        </nat>

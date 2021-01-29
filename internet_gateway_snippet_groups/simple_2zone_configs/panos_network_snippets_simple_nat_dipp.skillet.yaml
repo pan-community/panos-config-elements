@@ -1,7 +1,8 @@
 name: panos_network_snippets_nat_dipp
-label: Outbound dynamic port - DIPP - configuration
+label: Outbound single source zone dynamic port - DIPP - configuration
 description: |-
-  collection of PAN-OS network config elements for basic outbound NAT using DIPP
+  collection of PAN-OS network config elements for basic outbound NAT using DIPP.
+  single source internal zone
 type: panos
 labels:
   collection:
