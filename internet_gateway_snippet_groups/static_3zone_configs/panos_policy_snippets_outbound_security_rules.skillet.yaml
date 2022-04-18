@@ -97,9 +97,9 @@ snippets:
         <service>
           <member>application-default</member>
         </service>
-        <hip-source>
+        <source-hip>
           <member>any</member>
-        </hip-source>
+        </source-hip>
         <action>deny</action>
         <description>blocks quic and forces use of standard ssl for web sessions to help capture url values of encrypted sessions</description>
         <log-setting>default</log-setting>
@@ -144,9 +144,9 @@ snippets:
         <service>
           <member>application-default</member>
         </service>
-        <hip-source>
+        <source-hip>
           <member>any</member>
-        </hip-source>
+        </source-hip>
         <action>allow</action>
         <log-end>yes</log-end>
         <log-setting>default</log-setting>
@@ -186,9 +186,9 @@ snippets:
         <service>
           <member>application-default</member>
         </service>
-        <hip-source>
+        <source-hip>
           <member>any</member>
-        </hip-source>
+        </source-hip>
         <action>allow</action>
         <log-end>yes</log-end>
         <log-setting>default</log-setting>
@@ -234,9 +234,9 @@ snippets:
         <service>
           <member>any</member>
         </service>
-        <hip-source>
+        <source-hip>
           <member>any</member>
-        </hip-source>
+        </source-hip>
         <action>allow</action>
         <log-end>yes</log-end>
         <log-setting>default</log-setting>
@@ -282,9 +282,9 @@ snippets:
         <service>
           <member>any</member>
         </service>
-        <hip-source>
+        <source-hip>
           <member>any</member>
-        </hip-source>
+        </source-hip>
         <action>allow</action>
         <log-end>yes</log-end>
         <log-setting>default</log-setting>
@@ -331,9 +331,9 @@ snippets:
         <service>
           <member>any</member>
         </service>
-        <hip-source>
+        <source-hip>
           <member>any</member>
-        </hip-source>
+        </source-hip>
         <action>allow</action>
         <profile-setting>
           <group>
@@ -377,9 +377,9 @@ snippets:
         <service>
           <member>any</member>
         </service>
-        <hip-source>
+        <source-hip>
           <member>any</member>
-        </hip-source>
+        </source-hip>
         <action>allow</action>
         <profile-setting>
           <group>
